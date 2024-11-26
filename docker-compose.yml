@@ -1,0 +1,64 @@
+version: "3.8"
+
+services: 
+  db:
+    image: postgres:12.22-bookworm
+    container_name: db
+    volumes:
+    - ./pgdata:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRES_USER: worker
+      POSTGRES_PASSWORD: worker
+      POSTGRES_DB: app
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+     - "5432:5432"
+    env_file: 
+     - .env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U worker -d app" ]
+      interval: 4s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+  project:
+    image: djapp_docker:latest
+    container_name: project
+    depends_on:
+     db:
+        condition: service_healthy
+#    volumes: 
+#     - static_volume:/djapp/static
+#     - media_volume:/djapp/media
+    env_file: 
+     - .env
+    environment:
+      DJANGO_DB_HOST: db
+      DJANGO_DB_NAME: app
+      DJANGO_DB_USER: worker
+      DJANGO_DB_PASS: worker
+      DJANGO_DB_PORT: "5432"
+      DJANGO_DEBUG: "False"
+    ports:
+      - "8000:8000"
+    command: >
+      bash -c "./manage.py migrate && ./manage.py runserver 0.0.0.0:8000"
+  nginx:
+    build:
+     dockerfile: ./Dockerfile
+     context: ./docker/nginx/
+    #image: nginx:stable-alpine3.20-perl
+    container_name: djapp_nginx
+#    volumes: 
+#      - static_volume:/djapp/static
+#      - media_volume:/djapp/media
+    depends_on:
+     - db
+    ports:
+      #- "80:80"
+      - "${NGINX_EXTERNAL_PORT}:80"
+#volumes:
+#  static_volume:
+#  media_volume:

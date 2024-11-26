@@ -24,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!+2xjvrcp4w@64+^l!j)1-64$^m$!(n+koqc6uz2gdb@w!!970'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ['DJANGO_DEBUG'] or "False"
+DEBUG = False
+# DEBUG = os.environ['DJANGO_DEBUG'] or "False"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -78,11 +79,11 @@ WSGI_APPLICATION = 'parrotsite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
+#DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
 # }
 DATABASES = {
     'default': {
@@ -90,12 +91,12 @@ DATABASES = {
         'HOST': os.environ['DJANGO_DB_HOST'],
         'NAME': os.environ['DJANGO_DB_NAME'],
         'USER': os.environ['DJANGO_DB_USER'],
-        'PASSWORD': os.environ['DJANGO_DB_PASS'],
+       'PASSWORD': os.environ['DJANGO_DB_PASS'],
         'PORT': os.environ['DJANGO_DB_PORT']
 
     }
 }
-# DATABASES = {
+#DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
 #         'HOST': '200.1.1.8',
@@ -103,7 +104,7 @@ DATABASES = {
 #         'USER': 'worker',
 #         'PASSWORD': 'worker',
 #         'PORT': '5432'
-
+#
 #     }
 # }
 
@@ -142,7 +143,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -153,3 +153,4 @@ MEDIA_URL = '/media/'
 
 # Путь хранения картинок
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_ROOT = 'media'
